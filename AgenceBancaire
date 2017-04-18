@@ -1,0 +1,207 @@
+import java.util.*;
+
+/**
+ * @author PISSARAW
+ *
+ */
+public class AgenceBancaire implements Comparable<AgenceBancaire>{
+	
+	/**
+	 * Le nom de la banque rattachée à l'agence
+	 */
+	private String nomBanque;
+	
+	/**
+	 * Le nom de la ville où se trouve l'agence
+	 */
+	private String ville;
+	
+	/**
+	 * Liste des comptes affiliés à l'agence
+	 */
+	private ArrayList <CompteBancaire> compte = new ArrayList <CompteBancaire>();
+	
+	
+	/**
+	 * Hashmap contenant une liste de devises et leur valeur par rapport à l'Euro
+	 */
+	public static final HashMap <String, Float> DEVISES;
+	
+	
+	static{
+		DEVISES = new HashMap<String, Float>();
+		DEVISES.put("dollar", (float)0.91);
+		DEVISES.put("livre sterling", (float) 1.29);
+		DEVISES.put("roupie indienne", (float) 0.014);
+		DEVISES.put("euro", (float) 1);
+	}
+	
+	/**
+	 * Constructeur d'agence
+	 * 
+	 * @param banque
+	 * @param laville
+	 */
+	public AgenceBancaire(String banque, String laville)
+	{
+		this.nomBanque=banque;
+		this.ville=laville;
+	}
+	
+	/**
+	 * @return the nomBanque
+	 */
+	public String getNomBanque() {
+		return nomBanque;
+	}
+	/**
+	 * @param nomBanque le nom de Banque à modifier
+	 */
+	public void setNomBanque(String nomBanque) {
+		this.nomBanque = nomBanque;
+	}
+	/**
+	 * @return la ville
+	 */
+	public String getVille() {
+		return ville;
+	}
+	
+	/**
+	 * ToString de l'agence
+	 * 
+	 * @return s
+	 */
+	public String toString()
+	{
+		String s = new String("Nom de la banque rattaché : ");
+		s+=this.nomBanque + "\n";
+		s+="Ville : " + this.ville + "\n";
+		s+=this.compte.toString();
+		return s;	
+	}
+	
+	/**
+	 * Ajoute un compte bancaire à la liste de comptes de l'agence
+	 * 
+	 * @param cb
+	 */
+	public void ajoute(CompteBancaire cb)
+	{
+		//this.compte.add(cb);
+		if(!this.compte.contains(cb)){
+			//for(CompteBancaire com : this.compte){
+				//if(com.getNumero()!=cb.getNumero()){
+					this.compte.add(cb);
+				//}
+			//}
+		}
+	}
+	
+	/**
+	 * @param cb
+	 * @return l'existance du compte bancaire dans l'agence
+	 */
+	public boolean compteExiste(CompteBancaire cb)
+	{
+		if(this.compte.contains(cb))
+			return true;
+		else
+			return false;
+	}
+	
+	/**
+	 * @param personne
+	 * @return la présence du client dans l'agence
+	 */
+	public boolean personneExiste(String personne)
+	{
+		for(CompteBancaire p:this.compte){
+		    if(p.getNom().equals(personne))
+		    	return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * @param client
+	 * Affiche tout les comptes du client
+	 */
+	public void lesComptesDe(String client)
+	{
+		if(this.personneExiste(client)){
+			for(CompteBancaire p: this.compte){
+				if(p.getNom().equals(client)){
+					System.out.println(p);
+				}
+			}
+		}
+		else{
+			System.out.println("le compte n'exite pas");
+		}
+	}
+	
+	/**
+	 * @return clients
+	 * Affiche tout les clients d'une agence bancaire
+	 */
+	public ArrayList <String> mesClients()
+	{
+		ArrayList <String> clients = new ArrayList <String>();
+		for(CompteBancaire p: this.compte){
+			clients.add(p.getNom());
+		}
+		return clients;
+	}
+
+	
+	/**
+	 * @param d
+	 * @return le taux de la devise
+	 */
+	static Float leTaux(String d){
+			if(DEVISES.containsKey(d))
+				return DEVISES.get(d);
+		return -1f;
+	}
+	
+	/**
+	 * @param nomDevise
+	 * @param valeurEnEuro
+	 * @return le taux de la devise en Euro
+	 */
+	static float convertirSomme(String nomDevise, Float valeurEnEuro){
+		Float taux= AgenceBancaire.leTaux(nomDevise);
+		if(taux!=-1f){
+			return taux*valeurEnEuro;
+		}
+		return -1f;
+		
+	}
+	
+	/**
+	 * @return trie les comptes bancaires
+	 */
+	public ArrayList<CompteBancaire> trie(){
+		Collections.sort(this.compte);
+		return this.compte;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Comparable#compareTo(java.lang.Object)
+	 */
+	public int compareTo(AgenceBancaire a) {
+		if(this.compte.size() < a.compte.size())
+			{
+				System.out.println(this.nomBanque + " a moins de comptes bancaires que " + a.nomBanque);
+				return -1;
+			}
+		if(this.compte.size() == a.compte.size()) {
+			System.out.println(this.nomBanque + " a le même nombre de comptes bancaires que " + a.nomBanque);
+			return 0;
+		}
+		System.out.println(this.nomBanque + " a plus de comptes bancires que " + a.nomBanque);
+		return 1;
+
+	}
+}
