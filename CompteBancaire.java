@@ -1,7 +1,5 @@
 /**
- * Caneva de classe de gestion d'un compte bancaire
- * @version de base donnée aux étudiants
- * @author Françoise Gayral
+ * @author PISSARAW
  */
 public class CompteBancaire implements Comparable <CompteBancaire>{
 
